@@ -50,6 +50,7 @@
     "raw-loader": "^0.5.1",
     "react-hot-loader": "^1.2.4",
     "should": "^6.0.1",
+    "sinon": "^1.14.1",
     "sorty": "^1.2.0",
     "style-loader": "^0.8.2",
     "stylus-loader": "^0.4.0",
