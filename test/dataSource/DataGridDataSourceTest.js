@@ -14,25 +14,12 @@ var COL_MENU_BTN        = 'z-show-menu'
 var REMOTE_DATA			= 'http://5.101.99.47:8090/10'
 
 var testUtils = require('../utils')
-var sinon = require('sinon')
 
 var render        = testUtils.render
 var findWithClass = testUtils.findWithClass
 var tryWithClass  = testUtils.tryWithClass
 
 describe('DataGrid Test Suite - DataSource', function(){
-
-	beforeEach(function() {
-		this.xhr = sinon.useFakeXMLHttpRequest();
-		this.requests = [];
-        this.xhr.onCreate = function(xhr) {
-            this.requests.push(xhr);
-        }.bind(this);
-    });
-
-    afterEach(function() {
-        this.xhr.restore();
-    });
 
 	it('check dataSource supported format : array',function(done) {
 
@@ -64,8 +51,19 @@ describe('DataGrid Test Suite - DataSource', function(){
 	it('check dataSource supported format : string',function(done) {
 
 		this.timeout(5000);
-		
-		var data = [{ id: 0, index: 1, firstName: 'John', city: 'London', email: 'jon@gmail.com'}];
+
+        
+
+        var fetchData = function(url) {
+            var data = {data : [{ id: 0, index: 1, firstName: 'John', city: 'London', email: 'jon@gmail.com'}],count:1};
+            var promise = new Promise(function(resolve,reject) {
+                resolve(data);
+            })
+            return promise;
+        }
+
+        //console.log(fetchData(REMOTE_DATA));
+
 		var columns = [
             { name: 'index', title: '#', width: 50 },
             { name: 'firstName'},
@@ -90,16 +88,23 @@ describe('DataGrid Test Suite - DataSource', function(){
                 idProperty: 'id',
                 dataSource: REMOTE_DATA,
                 columns   : columns,
-                onDataSourceSuccess : checkRemoteRows,
-                onDataSourceError : errorResponse
+                style     : {height:200},
+                fetch     : fetchData
             })
         );
 
-        this.requests[0].respond(200, { 'Content-Type': 'text/json' }, data);
+        function testFn() {
+            console.log('in test Fn');
+            console.log(table);
+        }
 
+        setTimeout(function() {
+            console.log(table.getDOMNode().outerHTML);
+            done();
+        },2000)
 
-       /* var rows = tryWithClass(table,ROW_CLASS);
-        rows.length.should.equal(10);*/
+        /*var rows = tryWithClass(table,ROW_CLASS);
+        rows.length.should.equal(1);*/
 
 		/*setTimeout(function() {
 			console.log(tryWithClass(table,ROW_CLASS).length);
