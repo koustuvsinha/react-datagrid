@@ -37,10 +37,15 @@ describe('DataGrid Test Suite - DataSource', function(){
 		// create mock fetchData
 
         fetchData = function(url) {
+            console.log(url);
             if(paginationEnabled)
             	url.should.be.equal(REMOTE_DATA + remoteDataOptions);
           	else
           		url.should.be.equal(REMOTE_DATA);
+
+            if(remoteDataOptions === REMOTE_DATA_OPTIONS3) {
+                console.log(data);
+            }
 
             var promise = new Promise(function(resolve,reject) {
                 resolve(data);
@@ -153,6 +158,8 @@ describe('DataGrid Test Suite - DataSource', function(){
         function pageChanged(page) {
         	// check navigated to next page
         	page.should.equal(nextPage);
+            console.log('----------------------------------------------------------------------\n\n');
+            console.log(table.getDOMNode().outerHTML);
         	
         }
 
@@ -171,6 +178,13 @@ describe('DataGrid Test Suite - DataSource', function(){
             })[0];
 
             // first, navigate to second page
+            
+            data = {
+                data : [
+                    { id: 1, index: 2, firstName: 'Koustuv', city: 'Kolkata', email: 'ks@gmail.com'}
+                ],
+                count:2
+            };
 
             // set remote data url
             remoteDataOptions = REMOTE_DATA_OPTIONS3;
@@ -180,10 +194,10 @@ describe('DataGrid Test Suite - DataSource', function(){
 
             // then navigate back to first page
 
-			remoteDataOptions = REMOTE_DATA_OPTIONS2;
+			/*remoteDataOptions = REMOTE_DATA_OPTIONS2;
 	        nextPage = 1;
 
-            TestUtils.Simulate.click(prevPageButton.getDOMNode()); 
+            TestUtils.Simulate.click(prevPageButton.getDOMNode()); */
 
             done()
         },0)
